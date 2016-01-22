@@ -69,7 +69,9 @@ namespace mlAssignment1
                 // in a binary tree node, there will only be two results when splitting
                 // by an attribute
 
-                //MathHelpers.InformationGained()
+                double[][] formattedEntropies = GetEntropiesAndDistByAttr(subset, attr);
+
+                double ig = MathHelpers.InformationGained(parentEntropy, formattedEntropies[0], formattedEntropies[1]);
             }
         }
 
@@ -155,11 +157,10 @@ namespace mlAssignment1
             return counts;
         }
 
-        private double[,] GetEntropiesAndDistByAttr(List<DataRow> subset, string attr)
+        private double[][] GetEntropiesAndDistByAttr(List<DataRow> subset, string attr)
         {
             // this method will be a bit specialized since we are in the binary tree builder
             Dictionary<int, List<DataRow>> split = new Dictionary<int, List<DataRow>>();
-            Dictionary<int, int> distrobutionByAttr = new Dictionary<int, int>();
 
             for(int i = 0; i < subset.Count; i++)
             {
@@ -176,30 +177,34 @@ namespace mlAssignment1
                     split.Add(result, subsubset);
                 }
             }
-
-            foreach(var kvp in split)
-            {
-                distrobutionByAttr.Add(kvp.Key, kvp.Value.Count);
-            }
-
-            // x is first or seconc array
+            
             // y is either entropy or distro
 
-            double[,] @return = new double[2, distrobutionByAttr.Count];
+            double[][] @return = new double[2][];
 
-            for (int x = 0; x < 2; x++)
+
+
+            // todo: formalize which count you should use
+
+            // x dim: 0 is list of entropies
+            // x dim: 1 is list of dists
+            // get all the entropies of subset
+
+            double[] array = new double[split.Count];
+            for (int y = 0; y < split.Count; y++)
             {
-                // todo: formalize which count you should use
-
-                // get all the entropies of subset
-                for(int y = 0; y < split.Count; y++)
-                {
-                    @return[x, y]
-                }
+                array[y] = Entropy(split[y]);
+                @return[0] = array;
             }
 
-            //return @return;
-            return new double[0, 0];
+            array = new double[split.Count];
+            for (int y = 0; y < split.Count; y++)
+            {
+                array[y] = (double)split[y].Count / (double)subset.Count;
+                @return[1] = array;
+            }
+           
+            return @return;
         }
 
         /// <summary>
