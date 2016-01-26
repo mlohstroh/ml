@@ -7,12 +7,14 @@ namespace mlAssignment1
 {
     class Program
     {
+        public static bool Debug = false;
+
         static void Main(string[] args)
         {
             // testing entropy function
             //Console.WriteLine("Entropy: {0}", MathHelpers.Entropy(new double[] { 1.0/4.0, 3.0/4.0 }));
 
-            ////// testing IG function
+            //// testing IG function
             //double pE = 1;
             //double rE = MathHelpers.Entropy(new double[] { 4.0 / 7.0, 3.0 / 7.0 });
             //double LE = MathHelpers.Entropy(new double[] { 2.0 / 3.0, 1.0 / 3.0 });
@@ -31,7 +33,11 @@ namespace mlAssignment1
                 List<DataRow> trainData = ReadFile(trainPath);
                 List<DataRow> testData = ReadFile(testPath);
 
-                root = new BooleanTreeNode("Root", trainData);
+                int trainDataCount = trainData.Count;
+
+                List<DataRow> prunedData = trainData.GetRange(0, trainDataCount);
+
+                root = new BooleanTreeNode("Root", prunedData);
                 if (trainData.Count > 0)
                 {
                     var hash = new HashSet<string>(trainData[0].Attributes);
@@ -39,6 +45,9 @@ namespace mlAssignment1
                     hash.Remove("class");
                     root.BuildTree(hash);
                     root.PrintTree();
+
+                    PrintCorrectness(prunedData, root);
+                    PrintCorrectness(testData, root, "test");
                 }
                 else
                 {
@@ -126,6 +135,26 @@ namespace mlAssignment1
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, 10)
               .Select(s => s[r.Next(s.Length)]).ToArray());
+        }
+
+        private static void PrintCorrectness(List<DataRow> data, BooleanTreeNode tree, string set = "training")
+        {
+            int correct = 0;
+
+            for(int i = 0; i < data.Count; i++)
+            {
+                int realClassification = data[i].RetrieveClassification();
+                int treeClassification = tree.Classify(data[i]);
+
+                if(realClassification == treeClassification)
+                {
+                    correct++;
+                }
+            }
+
+            double accuracy = ((double)correct / (double)data.Count) * 100;
+
+            Console.WriteLine("Accuracy on {0} set ({1} instances):   {2:0.0}%", set, data.Count, accuracy);
         }
     }
 }

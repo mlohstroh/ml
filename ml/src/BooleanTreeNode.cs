@@ -86,7 +86,8 @@ namespace mlAssignment1
 
                 double ig = MathHelpers.InformationGained(this, left, right);
 
-                Console.WriteLine("{0} Attribute has an information gain of {1}", attr, ig);
+                if (Program.Debug)
+                    Console.WriteLine("{0} Attribute has an information gain of {1}", attr, ig);
                 
                 if (ig > maxIG)
                 {
@@ -96,7 +97,8 @@ namespace mlAssignment1
                 }
             }
 
-            Console.WriteLine("Picking attribute {0} for an information gained of {1}", maxAttr, maxIG);
+            if(Program.Debug)
+                Console.WriteLine("Picking attribute {0} for an information gained of {1}", maxAttr, maxIG);
 
             // this is weird, repeating, leaving in for testing purposes
             BooleanTreeNode child1 = new BooleanTreeNode(maxAttr, splitByAttr[0])
@@ -151,6 +153,27 @@ namespace mlAssignment1
                 }
             }
             return 0;
+        }
+
+        public Dictionary<int, int> Classify(List<DataRow> data)
+        {
+            Dictionary<int, int> @return = new Dictionary<int, int>();
+
+            for(int i = 0; i < data.Count; i++)
+            {
+                int @class = Classify(data[i]);
+
+                if(@return.ContainsKey(@class))
+                {
+                    @return[@class] = @return[@class] + 1;
+                }
+                else
+                {
+                    @return[@class] = 1;
+                }
+            }
+
+            return @return;
         }
 
         private bool IsSubsetPure(List<DataRow> subset, out int firstClassification)
