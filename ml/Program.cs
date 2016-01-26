@@ -38,6 +38,7 @@ namespace mlAssignment1
                     // the reader counts the class as an attr. whoops
                     hash.Remove("class");
                     root.BuildTree(hash);
+                    root.PrintTree();
                 }
                 else
                 {

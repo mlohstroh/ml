@@ -13,7 +13,8 @@ namespace mlAssignment1
         /// <summary>
         /// The return result of the classification. This is only applicable for leaf nodes
         /// </summary>
-        public int Classification { get; set; }
+        public int Classification { get; private set; }
+        public int MatchValue { get; set; }
         private Dictionary<BooleanTreeNode, Func<DataRow, bool>> _children = new Dictionary<BooleanTreeNode, Func<DataRow, bool>>();
 
         public bool IsLeaf
@@ -54,14 +55,14 @@ namespace mlAssignment1
             {
                 // excellent, we have a pure node!
                 // set the classification and return
-                this.Classification = pureClass;
+                Classification = pureClass;
                 return;
             }
 
             if (remainingAttributes.Count == 0)
             {
                 // we have nothing else to splice, just return the majority or the global majority
-                this.Classification = MajorClass(Subset);
+                Classification = MajorClass(Subset);
                 return;
             }
 
@@ -98,17 +99,25 @@ namespace mlAssignment1
             Console.WriteLine("Picking attribute {0} for an information gained of {1}", maxAttr, maxIG);
 
             // this is weird, repeating, leaving in for testing purposes
-            BooleanTreeNode child1 = new BooleanTreeNode(maxAttr, splitByAttr[0]);
-            BooleanTreeNode child2 = new BooleanTreeNode(maxAttr, splitByAttr[1]);
-
-            this.AddChild(child1, (row) =>
+            BooleanTreeNode child1 = new BooleanTreeNode(maxAttr, splitByAttr[0])
             {
-                return row.RetrieveValueAsInt(maxAttr) == 0;
+                MatchValue = 0
+            };
+            BooleanTreeNode child2 = new BooleanTreeNode(maxAttr, splitByAttr[1])
+            {
+                MatchValue = 1
+            };
+
+            // == 0
+            AddChild(child1, (row) =>
+            {
+                return row.RetrieveValueAsInt(maxAttr) == child1.MatchValue;
             });
 
-            this.AddChild(child2, (row) =>
+            // == 1
+            AddChild(child2, (row) =>
             {
-                return row.RetrieveValueAsInt(maxAttr) == 1;
+                return row.RetrieveValueAsInt(maxAttr) == child2.MatchValue;
             });
 
             remainingAttributes.Remove(maxAttr);
@@ -215,9 +224,33 @@ namespace mlAssignment1
             return subsubsets;
         }
 
-        public void PrintTree()
+        public void PrintTree(int indent = -1)
         {
+            StringBuilder builder = new StringBuilder();
 
+            // special case for beginning of tree
+            if(Name != "Root")
+            {
+                for(int i = 0; i < indent; i++)
+                {
+                    builder.Append("| ");
+                }
+                builder.AppendFormat("{0} = {1} : ", Name, MatchValue);
+            }
+
+            if(!IsLeaf)
+            {
+                Console.WriteLine(builder.ToString());
+                foreach(var kvp in _children)
+                {
+                    kvp.Key.PrintTree(indent + 1);
+                }
+            }
+            else
+            {
+                builder.Append(Classification);
+                Console.WriteLine(builder.ToString());
+            }
         }
     }
 
