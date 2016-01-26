@@ -49,7 +49,7 @@ namespace mlAssignment1
                         – Child <= LearnTree(Xv, Yv)
 
             */
-            int pureClass = -1;
+            int pureClass = int.MinValue;
             if (IsSubsetPure(Subset, out pureClass))
             {
                 // excellent, we have a pure node!
@@ -69,7 +69,7 @@ namespace mlAssignment1
             double parentEntropy = MathHelpers.Entropy(Subset);
 
             string maxAttr = null;
-            double maxIG = -1;
+            double maxIG = int.MinValue;
             Dictionary<int, List<DataRow>> splitByAttr = null;
 
             // calculate the most information gained
@@ -85,16 +85,17 @@ namespace mlAssignment1
 
                 double ig = MathHelpers.InformationGained(this, left, right);
 
-                if (string.IsNullOrEmpty(maxAttr))
-                    maxAttr = attr;
+                Console.WriteLine("{0} Attribute has an information gain of {1}", attr, ig);
+                
                 if (ig > maxIG)
                 {
+                    maxAttr = attr;
                     maxIG = ig;
                     splitByAttr = tmp;
                 }
             }
 
-            Console.WriteLine("")
+            Console.WriteLine("Picking attribute {0} for an information gained of {1}", maxAttr, maxIG);
 
             // this is weird, repeating, leaving in for testing purposes
             BooleanTreeNode child1 = new BooleanTreeNode(maxAttr, splitByAttr[0]);
@@ -206,7 +207,17 @@ namespace mlAssignment1
                 }
             }
 
+            // make sure there are some 
+            if (!subsubsets.ContainsKey(0))
+                subsubsets[0] = new List<DataRow>();
+            if (!subsubsets.ContainsKey(1))
+                subsubsets[1] = new List<DataRow>();
             return subsubsets;
+        }
+
+        public void PrintTree()
+        {
+
         }
     }
 

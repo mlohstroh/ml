@@ -67,15 +67,18 @@ namespace mlAssignment1
             int totalRows = parent.Subset.Count;
 
             double sub = 0.0;
-            sub += left.GetEntropy() * (left.Subset.Count / totalRows);
-            sub += right.GetEntropy() * (right.Subset.Count / totalRows);
+            double leftEnt = left.GetEntropy();
+            double rightEnt = right.GetEntropy();
+            sub += leftEnt * ((double)left.Subset.Count / (double)totalRows);
+            sub += rightEnt * ((double)right.Subset.Count / (double)totalRows);
+            double ent = parent.GetEntropy();
 
-            return parent.GetEntropy() - sub;
+            return ent - sub;
         }
 
         public static Dictionary<int, int> CountByClassification(List<DataRow> subset)
         {
-            return CountByAttribute(subset, "classification");
+            return CountByAttribute(subset, "class");
         }
 
         public static Dictionary<int, int> CountByAttribute(List<DataRow> subset, string key)

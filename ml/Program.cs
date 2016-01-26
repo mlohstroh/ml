@@ -20,8 +20,8 @@ namespace mlAssignment1
             //double lD = 3.0 / 10.0;
             //double rD = 7.0 / 10.0;
             //Console.WriteLine("IG: {0}", MathHelpers.InformationGained(pE, new double[] { LE, rE }, new double[] { lD, rD }));
-
-            if(args.Length != 2)
+            BooleanTreeNode root;
+            if (args.Length != 2)
             {
                 Console.WriteLine("Invalid input... Reading packaged test data...");
 
@@ -31,10 +31,13 @@ namespace mlAssignment1
                 List<DataRow> trainData = ReadFile(trainPath);
                 List<DataRow> testData = ReadFile(testPath);
 
-                BooleanTreeNode root = new BooleanTreeNode("Root", trainData);
+                root = new BooleanTreeNode("Root", trainData);
                 if (trainData.Count > 0)
                 {
-                    root.BuildTree(new HashSet<string>(trainData[0].Attributes));
+                    var hash = new HashSet<string>(trainData[0].Attributes);
+                    // the reader counts the class as an attr. whoops
+                    hash.Remove("class");
+                    root.BuildTree(hash);
                 }
                 else
                 {
@@ -42,7 +45,7 @@ namespace mlAssignment1
                 }
             }
 
-            BuildTmpTree();
+            //BuildTmpTree();
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
