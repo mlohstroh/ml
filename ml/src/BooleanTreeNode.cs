@@ -1,0 +1,220 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace mlAssignment1
+{
+    public class BooleanTreeNode
+    {
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// The return result of the classification. This is only applicable for leaf nodes
+        /// </summary>
+        public int Classification { get; set; }
+        private Dictionary<BooleanTreeNode, Func<DataRow, bool>> _children = new Dictionary<BooleanTreeNode, Func<DataRow, bool>>();
+
+        public bool IsLeaf
+        {
+            get { return _children.Count == 0; }
+        }
+        public List<DataRow> Subset { get; private set; }
+
+        public BooleanTreeNode(string name, List<DataRow> subset)
+        {
+            Name = name;
+            Subset = subset;
+        }
+
+        public void BuildTree(HashSet<string> remainingAttributes)
+        {
+            // The meat of the algorithm
+
+            /*
+
+             LearnTree(X,Y)
+                – Input:
+                • Set X of R training vectors, each containing the values (x1,..,xM) of M attributes (X1,..,XM)
+                • A vector Y of R elements, where yj = class of the jth datapoint
+                – If all the datapoints in X have the same class value y
+                    • Return a leaf node that predicts y as output
+                – If all the datapoints in X have the same attribute value (x1,..,xM)
+                    • Return a leaf node that predicts the majority of the class values in Y
+                as output
+                – Try all the possible attributes Xj and choose the one, j*, for which IG(Y|Xj) is maximum
+                    – For every possible value v of Xj*:
+                        – Xv,Yv= set of datapoints for which xj* = v and corresponding classes
+                        – Child <= LearnTree(Xv, Yv)
+
+            */
+            int pureClass = -1;
+            if (IsSubsetPure(Subset, out pureClass))
+            {
+                // excellent, we have a pure node!
+                // set the classification and return
+                this.Classification = pureClass;
+                return;
+            }
+
+            if (remainingAttributes.Count == 0)
+            {
+                // we have nothing else to splice, just return the majority or the global majority
+                this.Classification = MajorClass(Subset);
+                return;
+            }
+
+            // get the entropy of the current node and subset
+            double parentEntropy = MathHelpers.Entropy(Subset);
+
+            string maxAttr = null;
+            double maxIG = -1;
+            Dictionary<int, List<DataRow>> splitByAttr = null;
+
+            // calculate the most information gained
+            foreach (string attr in remainingAttributes)
+            {
+                // in a binary tree node, there will only be two results when splitting
+                // by an attribute
+                var tmp = GetDistByAttr(Subset, attr);
+
+                // == 0
+                BooleanTreeNode right = new BooleanTreeNode(maxAttr, tmp[0]);
+                BooleanTreeNode left = new BooleanTreeNode(maxAttr, tmp[1]);
+
+                double ig = MathHelpers.InformationGained(this, left, right);
+
+                if (string.IsNullOrEmpty(maxAttr))
+                    maxAttr = attr;
+                if (ig > maxIG)
+                {
+                    maxIG = ig;
+                    splitByAttr = tmp;
+                }
+            }
+
+            Console.WriteLine("")
+
+            // this is weird, repeating, leaving in for testing purposes
+            BooleanTreeNode child1 = new BooleanTreeNode(maxAttr, splitByAttr[0]);
+            BooleanTreeNode child2 = new BooleanTreeNode(maxAttr, splitByAttr[1]);
+
+            this.AddChild(child1, (row) =>
+            {
+                return row.RetrieveValueAsInt(maxAttr) == 0;
+            });
+
+            this.AddChild(child2, (row) =>
+            {
+                return row.RetrieveValueAsInt(maxAttr) == 1;
+            });
+
+            remainingAttributes.Remove(maxAttr);
+
+            child1.BuildTree(new HashSet<string>(remainingAttributes));
+            child2.BuildTree(new HashSet<string>(remainingAttributes));
+        }
+
+        public double GetEntropy()
+        {
+            return MathHelpers.Entropy(Subset);
+        }
+
+        public void AddChild(BooleanTreeNode node, Func<DataRow, bool> resultFunc)
+        {
+            _children.Add(node, resultFunc);
+        }
+
+        public int Classify(DataRow row)
+        {
+            if (IsLeaf)
+            {
+                return Classification;
+            }
+
+            foreach(var kvp in _children)
+            {
+                if(kvp.Value(row))
+                {
+                    return kvp.Key.Classify(row);
+                }
+            }
+            return 0;
+        }
+
+        private bool IsSubsetPure(List<DataRow> subset, out int firstClassification)
+        {
+            firstClassification = -1;
+            for (int i = 0; i < subset.Count; i++)
+            {
+                DataRow current = subset[i];
+
+                int classification = current.RetrieveClassification();
+                if (firstClassification == -1)
+                {
+                    firstClassification = classification;
+                    continue;
+                }
+
+                if (classification != firstClassification)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private int MajorClass(List<DataRow> subset)
+        {
+            Dictionary<int, int> majorities = MathHelpers.CountByClassification(subset);
+
+            // TODO: Pick the overall majority in case of tie. This just picks the first one
+            int currentMax = 0;
+            int maxClass = 0;
+            foreach (var kvp in majorities)
+            {
+                if (kvp.Value > currentMax)
+                {
+                    currentMax = kvp.Value;
+                    maxClass = kvp.Key;
+                }
+            }
+
+            return maxClass;
+        }
+
+        private Dictionary<int, List<DataRow>> GetDistByAttr(List<DataRow> subset, string attr)
+        {
+            // this method will be a bit specialized since we are in the binary tree builder
+            Dictionary<int, List<DataRow>> subsubsets = new Dictionary<int, List<DataRow>>();
+
+            for (int i = 0; i < subset.Count; i++)
+            {
+                DataRow current = subset[i];
+                int result = current.RetrieveValueAsInt(attr);
+                if (subsubsets.ContainsKey(result))
+                {
+                    subsubsets[result].Add(current);
+                }
+                else
+                {
+                    List<DataRow> subsubset = new List<DataRow>();
+                    subsubset.Add(current);
+                    subsubsets.Add(result, subsubset);
+                }
+            }
+
+            return subsubsets;
+        }
+    }
+
+    public static class DataRowExtensions
+    {
+        public static int RetrieveClassification(this DataRow row)
+        {
+            return row.RetrieveValueAsInt("class");
+        }
+    }
+}

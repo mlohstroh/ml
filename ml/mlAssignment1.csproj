@@ -47,11 +47,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\DataRow.cs" />
     <Compile Include="src\MathHelpers.cs" />
-    <Compile Include="src\BinaryTreeBuilder.cs" />
-    <Compile Include="src\BinaryTreeNode.cs" />
+    <Compile Include="src\BooleanTreeNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="data\test-win.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\train-win.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

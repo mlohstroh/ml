@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace mlAssignment1
 {
@@ -23,6 +24,21 @@ namespace mlAssignment1
             return sum;
         }
 
+        public static double Entropy(List<DataRow> subset)
+        {
+            Dictionary<int, int> counts = CountByClassification(subset);
+
+            List<double> dists = new List<double>();
+
+            foreach (var kvp in counts)
+            {
+                double fraction = (double)kvp.Value / (double)subset.Count;
+                dists.Add(fraction);
+            }
+
+            return Entropy(dists.ToArray());
+        }
+
         /// <summary>
         /// Calculates the infomation gained between a parent node and splitting based a specific attribute
         /// Note, the arrays must be ordered so they match up. 
@@ -44,6 +60,42 @@ namespace mlAssignment1
             }
 
             return parentEntropy - rightSum;
+        }
+
+        public static double InformationGained(BooleanTreeNode parent, BooleanTreeNode left, BooleanTreeNode right)
+        {
+            int totalRows = parent.Subset.Count;
+
+            double sub = 0.0;
+            sub += left.GetEntropy() * (left.Subset.Count / totalRows);
+            sub += right.GetEntropy() * (right.Subset.Count / totalRows);
+
+            return parent.GetEntropy() - sub;
+        }
+
+        public static Dictionary<int, int> CountByClassification(List<DataRow> subset)
+        {
+            return CountByAttribute(subset, "classification");
+        }
+
+        public static Dictionary<int, int> CountByAttribute(List<DataRow> subset, string key)
+        {
+            Dictionary<int, int> counts = new Dictionary<int, int>();
+            for (int i = 0; i < subset.Count; i++)
+            {
+                DataRow current = subset[i];
+                int classification = current.RetrieveValueAsInt(key);
+                // increment via dict
+                if (counts.ContainsKey(classification))
+                {
+                    counts[classification] = counts[classification] + 1;
+                }
+                else
+                {
+                    counts[classification] = 1;
+                }
+            }
+            return counts;
         }
     }
 }
