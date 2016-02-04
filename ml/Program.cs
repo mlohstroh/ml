@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*
+    Author: Mark Lohstroh
+
+    The starting class. Messy, but it works. 
+
+    It takes two arguments, but if the arguments are malformed in any way, it defaults to packaged test data.
+
+    Code is available online at https://github.com/mlohstroh/ml
+
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;

@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+    Author: Mark Lohstroh
+
+    This file contains a bunch of math helpers to compute common functions
+
+*/
+
+using System;
 using System.Collections.Generic;
 
 namespace mlAssignment1

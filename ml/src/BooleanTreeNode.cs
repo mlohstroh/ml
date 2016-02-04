@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+    Author: Mark Lohstroh
+
+    This file contains the algorithm for building the tree based on a list of test data.
+    It is recursively called and built.
+
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
