@@ -23,38 +23,41 @@ namespace mlAssignment1
             //double rD = 7.0 / 10.0;
             //Console.WriteLine("IG: {0}", MathHelpers.InformationGained(pE, new double[] { LE, rE }, new double[] { lD, rD }));
             BooleanTreeNode root;
+            string trainPath = @"data\train-win.dat";
+            string testPath = @"data\test-win.dat";
             if (args.Length != 2)
             {
                 Console.WriteLine("Invalid input... Reading packaged test data...");
-
-                string trainPath = @"data\train-win.dat";
-                string testPath = @"data\test-win.dat";
-
-                List<DataRow> trainData = ReadFile(trainPath);
-                List<DataRow> testData = ReadFile(testPath);
-
-                int trainDataCount = trainData.Count;
-
-                List<DataRow> prunedData = trainData.GetRange(0, trainDataCount);
-
-                root = new BooleanTreeNode("Root", prunedData);
-                if (trainData.Count > 0)
-                {
-                    var hash = new HashSet<string>(trainData[0].Attributes);
-                    // the reader counts the class as an attr. whoops
-                    hash.Remove("class");
-                    root.BuildTree(hash);
-                    root.PrintTree();
-
-                    PrintCorrectness(prunedData, root);
-                    PrintCorrectness(testData, root, "test");
-                }
-                else
-                {
-                    Console.WriteLine("Uh oh...");
-                }
+            }
+            else
+            {
+                trainPath = args[0];
+                testPath = args[1];
             }
 
+            List<DataRow> trainData = ReadFile(trainPath);
+            List<DataRow> testData = ReadFile(testPath);
+
+            int trainDataCount = trainData.Count;
+
+            List<DataRow> prunedData = trainData.GetRange(0, trainDataCount);
+
+            root = new BooleanTreeNode("Root", prunedData);
+            if (trainData.Count > 0)
+            {
+                var hash = new HashSet<string>(trainData[0].Attributes);
+                // the reader counts the class as an attr. whoops
+                hash.Remove("class");
+                root.BuildTree(hash);
+                root.PrintTree();
+
+                PrintCorrectness(prunedData, root);
+                PrintCorrectness(testData, root, "test");
+            }
+            else
+            {
+                Console.WriteLine("Uh oh...");
+            }
             //BuildTmpTree();
 
             Console.WriteLine("Press any key to exit...");
