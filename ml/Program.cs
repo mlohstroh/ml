@@ -46,8 +46,8 @@ namespace mlAssignment1
                 testPath = args[1];
             }
 
-            List<DataRow> trainData = ReadFile(trainPath);
-            List<DataRow> testData = ReadFile(testPath);
+            List<DataRow> trainData = DataRow.ReadFile(trainPath);
+            List<DataRow> testData = DataRow.ReadFile(testPath);
 
             int trainDataCount = trainData.Count;
 
@@ -73,34 +73,6 @@ namespace mlAssignment1
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
-        }
-
-        private static List<DataRow> ReadFile(string file)
-        {
-            List<DataRow> read = new List<DataRow>();
-
-            using (StreamReader reader = new StreamReader(file))
-            {
-                // read the header
-
-                string[] attrs = reader.ReadLine().Split(new char[] { '\t' });
-
-                string line;
-                while((line = reader.ReadLine()) != null)
-                {
-                    Dictionary<string, object> dict = new Dictionary<string, object>();
-                    string[] data = line.Split(new char[] { '\t' });
-                    for(int i = 0; i < attrs.Length; i++)
-                    {
-                        dict[attrs[i]] = int.Parse(data[i]);
-                    }
-
-                    read.Add(new DataRow(dict));
-
-                }
-            }
-
-            return read;
         }
 
         private static void BuildTmpTree()

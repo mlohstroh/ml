@@ -107,5 +107,12 @@ namespace mlAssignment1
             }
             return counts;
         }
+
+        public static double DerivativeSigmoid(double weightedSum)
+        {
+            float first = 1.0f / (1.0f + (float)Math.Pow(Math.E, -weightedSum));
+            float second = (float)(-Math.Pow(Math.E, -weightedSum)) / (1.0f + (float)Math.Pow(Math.E, -weightedSum));
+            return first * second;
+        }
     }
 }
