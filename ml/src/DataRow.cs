@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace mlAssignment1
@@ -73,6 +74,34 @@ namespace mlAssignment1
             if (val == null)
                 return "";
             return val.ToString();
+        }
+
+        public static List<DataRow> ReadFile(string file)
+        {
+            List<DataRow> read = new List<DataRow>();
+
+            using (StreamReader reader = new StreamReader(file))
+            {
+                // read the header
+
+                string[] attrs = reader.ReadLine().Split(new char[] { '\t' });
+
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Dictionary<string, object> dict = new Dictionary<string, object>();
+                    string[] data = line.Split(new char[] { '\t' });
+                    for (int i = 0; i < attrs.Length; i++)
+                    {
+                        dict[attrs[i]] = int.Parse(data[i]);
+                    }
+
+                    read.Add(new DataRow(dict));
+
+                }
+            }
+
+            return read;
         }
     }
 }
