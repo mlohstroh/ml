@@ -11,8 +11,8 @@ namespace mlAssignment2
     {
         public static void Main(string[] args)
         {
-            string trainFile = "data\\train2-win.dat";
-            string testFile = "data\\test2-win.dat";
+            string trainFile = "data/train2-win.dat";
+            string testFile = "data/test2-win.dat";
             float learningRate = 0.3f;
             int numIterations = 400;
 
