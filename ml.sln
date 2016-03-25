@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlAssignment1", "ml\mlAssig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlAssignment2", "mlAssignment2\mlAssignment2.csproj", "{5693C3FD-1CDF-4B88-8397-5DD00E97EF22}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5072CC12-F08A-4100-9719-DAD184562826}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlAssignment3", "mlAssignment3\mlAssignment3.csproj", "{5A1E237C-9CD7-4ED2-A029-73F94BE3494F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,10 @@ Global
 		{5693C3FD-1CDF-4B88-8397-5DD00E97EF22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5693C3FD-1CDF-4B88-8397-5DD00E97EF22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5693C3FD-1CDF-4B88-8397-5DD00E97EF22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1E237C-9CD7-4ED2-A029-73F94BE3494F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1E237C-9CD7-4ED2-A029-73F94BE3494F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1E237C-9CD7-4ED2-A029-73F94BE3494F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1E237C-9CD7-4ED2-A029-73F94BE3494F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

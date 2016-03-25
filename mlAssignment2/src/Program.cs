@@ -13,8 +13,8 @@ namespace mlAssignment2
         {
             string trainFile = "data\\train2-win.dat";
             string testFile = "data\\test2-win.dat";
-            float learningRate = 0.3f;
-            int numIterations = 400;
+            float learningRate = 5f;
+            int numIterations = 4000;
 
             if (args.Length >= 4)
             {
