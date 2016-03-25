@@ -49,7 +49,7 @@ namespace mlAssignment2
             {
                 DataRow current = null;
                 if (i >= data.Count)
-                    current = data[i % data.Count];
+					current = data[data.Count % i];
                 else
                     current = data[i];
 
@@ -63,7 +63,7 @@ namespace mlAssignment2
                 {
                     Edge currentEdge = _edges[x];
                     int attrValue = current.RetrieveValueAsInt(currentEdge.Attribute);
-                    float newWeight = currentEdge.Weight + LearningRate * (float)(actual - computed) * (float)attrValue * (float)MathHelpers.DerivativeSigmoid(unsigmoided);
+					float newWeight = currentEdge.Weight + LearningRate * (float)(actual - weightedSum) * (float)attrValue * (float)MathHelpers.DerivativeSigmoid(unsigmoided);
                     currentEdge.Weight = newWeight;
                     Console.Write(currentEdge);
                     Console.Write(" ");
@@ -94,7 +94,7 @@ namespace mlAssignment2
         {
             int computed = 1;
 
-            if (weightedSum >= Threshold)
+            if (weightedSum > Threshold)
             {
                 computed = 1;
             }
@@ -119,7 +119,7 @@ namespace mlAssignment2
             unactivated = weightedSum;
 
             // now that we have the weighted sum, lets sigmoid it
-            return 1.0 / (1.0 + Math.Pow(Math.E, weightedSum));
+			return 1.0 / (1.0 + Math.Pow(Math.E, -weightedSum));
         }
     }
 }
