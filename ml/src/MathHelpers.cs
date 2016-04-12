@@ -110,9 +110,12 @@ namespace mlAssignment1
 
         public static double DerivativeSigmoid(double weightedSum)
         {
-            float first = 1.0f / (1.0f + (float)Math.Pow(Math.E, -weightedSum));
-            float second = (float)(-Math.Pow(Math.E, -weightedSum)) / (1.0f + (float)Math.Pow(Math.E, -weightedSum));
-            return first * second;
+			return Sigmoid (weightedSum) * (1.0 - Sigmoid (weightedSum));
         }
+
+		public static float Sigmoid(double sig)
+		{
+			return 1.0f / (1.0f + (float)Math.Pow (Math.E, -sig));
+		}
     }
 }
