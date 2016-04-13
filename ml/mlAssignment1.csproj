@@ -45,7 +45,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\DataRow.cs" />
+    <Compile Include="src\DataRow.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="src\MathHelpers.cs" />
     <Compile Include="src\BooleanTreeNode.cs" />
   </ItemGroup>

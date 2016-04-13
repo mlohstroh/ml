@@ -13,8 +13,8 @@ namespace mlAssignment3
             {
                 Console.WriteLine("Incorrect arguments...");
             }
-            int numActions = 2;
-            string file = "data\\test.in";
+            int numActions = 3;
+            string file = "data/mytest.in.txt";
             float gamma = 0.9f;
 
             try
@@ -24,7 +24,7 @@ namespace mlAssignment3
                 file = args[2];
                 gamma = float.Parse(args[3]);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 Console.WriteLine("Exception reading arguments...");
                 Console.WriteLine("Please enter exactly 4 arguments");
@@ -41,6 +41,7 @@ namespace mlAssignment3
                 while ((line = reader.ReadLine()) != null)
                 {
                     
+					line = line.Trim ();
                     string[] data = line.Split(new char[] { '\t', ' ' });
 
                     if (data.Length > 2)

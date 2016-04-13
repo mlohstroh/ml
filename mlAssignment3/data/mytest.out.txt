@@ -1,0 +1,40 @@
+After iteration 1
+(s1 a1 0.0000) (s2 a1 0.0000) (s3 a1 10.0000) (s4 a1 10.0000) 
+After iteration 2:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 3:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 4:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 5:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 6:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 7:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 8:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 9:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 10:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 11:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 12:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 13:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 14:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 15:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 16:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 17:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 18:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 19:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 
+After iteration 20:
+(s1 a1 0.0000) (s2 a3 0.0000) (s3 a2 10.0000) (s4 a2 10.0000) 

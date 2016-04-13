@@ -49,13 +49,15 @@ namespace mlAssignment2
             {
                 DataRow current = null;
                 if (i >= data.Count)
-					current = data[data.Count % i];
+					current = data[i % data.Count];
                 else
                     current = data[i];
 
-                double unsigmoided;
-                double weightedSum = GetWeightedSum(current, out unsigmoided);
-                int computed = ClassifyWithThreshold(weightedSum);
+				// get dot product
+                double weightedSum = GetWeightedSum(current);
+				// get the activated result from the sigmoid
+				double activatedResult = MathHelpers.Sigmoid (weightedSum);
+
                 int actual = current.RetrieveClassification();
 
                 Console.Write("After iteration {0}: ", i);
@@ -63,12 +65,12 @@ namespace mlAssignment2
                 {
                     Edge currentEdge = _edges[x];
                     int attrValue = current.RetrieveValueAsInt(currentEdge.Attribute);
-					float newWeight = currentEdge.Weight + LearningRate * (float)(actual - weightedSum) * (float)attrValue * (float)MathHelpers.DerivativeSigmoid(unsigmoided);
+					float newWeight = currentEdge.Weight + LearningRate * (float)(actual - activatedResult) * (float)attrValue * (float)MathHelpers.DerivativeSigmoid(weightedSum);
                     currentEdge.Weight = newWeight;
                     Console.Write(currentEdge);
                     Console.Write(" ");
                 }
-                Console.Write("output = {0}", weightedSum);
+				Console.Write("output = {0}", activatedResult);
                 Console.WriteLine();
             }
         }
@@ -81,8 +83,7 @@ namespace mlAssignment2
             for(int i = 0; i < data.Count; i++)
             {
                 int actual = data[i].RetrieveClassification();
-                double tmp;
-                int computed = ClassifyWithThreshold(GetWeightedSum(data[i], out tmp));
+				int computed = ClassifyWithThreshold(MathHelpers.Sigmoid(GetWeightedSum(data[i])));
                 if (computed == actual)
                     correctClassifications++;
             }
@@ -106,7 +107,7 @@ namespace mlAssignment2
             return computed;
         }
 
-        private double GetWeightedSum(DataRow row, out double unactivated)
+        private double GetWeightedSum(DataRow row)
         {
             double weightedSum = 0;
 
@@ -116,10 +117,8 @@ namespace mlAssignment2
                 weightedSum += currentEdge.Weight * row.RetrieveValueAsInt(currentEdge.Attribute);
             }
 
-            unactivated = weightedSum;
-
             // now that we have the weighted sum, lets sigmoid it
-			return 1.0 / (1.0 + Math.Pow(Math.E, -weightedSum));
+			return weightedSum;
         }
     }
 }

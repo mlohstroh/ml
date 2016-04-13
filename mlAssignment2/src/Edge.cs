@@ -13,7 +13,7 @@ namespace mlAssignment2
 
         public override string ToString()
         {
-            return string.Format("w({0}) = {1}", Attribute, Weight);
+			return string.Format("w({0}) = {1:F4}", Attribute, Weight);
         }
     }
 }

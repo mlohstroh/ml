@@ -58,20 +58,16 @@ namespace mlAssignment3
 
             List<Policy> policies = _policies[_currentIteration];
 
-
             for(int i = 0; i < _states.Count; i++)
             {
                 State current = _states[i];
 
                 var tuple = ActionSum(current);
 
-                // current reward + gamma * action_sum
-                float j = current.Reward + Gamma * tuple.Item2;
-
                 // just set the reward
                 policies.Add(new Policy()
                 {
-                    J = j,
+					J = tuple.Item2,
                     State = current,
                     Action = tuple.Item1
                 });
@@ -91,8 +87,7 @@ namespace mlAssignment3
 
         private Tuple<MDPAction, float> ActionSum(State current)
         {
-            float maxSum = -1;
-            MDPAction action = null;
+			Dictionary<MDPAction, float> tmp = new Dictionary<MDPAction, float> ();
 
             for (int x = 0; x < current.Actions.Count; x++)
             {
@@ -100,17 +95,16 @@ namespace mlAssignment3
                 float sum = 0;
                 foreach(var kvp in a.Chances)
                 {
-                    sum += GetJAtPreviousIteration(kvp.Key) * kvp.Value;
+					sum += GetJAtPreviousIteration(kvp.Key) * kvp.Value;
                 }
                 
-                if(sum > maxSum)
-                {
-                    maxSum = sum;
-                    action = a;
-                }
+				tmp.Add (a, sum);
             }
 
-            return new Tuple<MDPAction, float>(action, maxSum);
+			var max = tmp.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+
+			// current reward + gamma * action_sum
+			return new Tuple<MDPAction, float>(max, current.Reward + Gamma * tmp[max]);
         }
 
         private float GetJAtPreviousIteration(string stateLookup)
