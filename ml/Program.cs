@@ -46,8 +46,8 @@ namespace mlAssignment1
                 testPath = args[1];
             }
 
-            List<DataRow> trainData = ReadFile(trainPath);
-            List<DataRow> testData = ReadFile(testPath);
+            List<DataRow> trainData = DataRow.ReadFile(trainPath);
+            List<DataRow> testData = DataRow.ReadFile(testPath);
 
             int trainDataCount = trainData.Count;
 

@@ -107,5 +107,15 @@ namespace mlAssignment1
             }
             return counts;
         }
+
+        public static double DerivativeSigmoid(double weightedSum)
+        {
+			return Sigmoid (weightedSum) * (1.0 - Sigmoid (weightedSum));
+        }
+
+		public static float Sigmoid(double sig)
+		{
+			return 1.0f / (1.0f + (float)Math.Pow (Math.E, -sig));
+		}
     }
 }
