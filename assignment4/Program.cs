@@ -10,7 +10,20 @@ namespace assignment4
     {
         static void Main(string[] args)
         {
-            //var train = DataRow
+            var train = DataRow.ReadFile("data\\train.dat");
+            var test = DataRow.ReadFile("data\\test.dat");
+
+            NBayes bayes = new NBayes(train);
+            bayes.Train();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            bayes.Test(train, "Train");
+            bayes.Test(test, "Test");
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
         }
     }
 }

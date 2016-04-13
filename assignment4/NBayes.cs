@@ -15,7 +15,7 @@ namespace assignment4
 
         public override string ToString()
         {
-            return string.Format("P({0}={1}|{2})={3}", Attribute, AttributeValue, Classification, Probability);
+            return string.Format("P({0}={1}|{2})={3:F4}", Attribute, AttributeValue, Classification, Probability);
         }
     }
 
@@ -23,7 +23,7 @@ namespace assignment4
     {
         private HashSet<string> _attributes = new HashSet<string>();
         private List<DataRow> _train = new List<DataRow>();
-        private List<BayesContainer> _probabilities = new List<BayesContainer>();
+        private Dictionary<int, List<BayesContainer>> _probabilities = new Dictionary<int, List<BayesContainer>>();
 
         // Hack: I need these two variables for the binary split
         int countOfZero = 0;
@@ -37,6 +37,10 @@ namespace assignment4
                 _attributes = new HashSet<string>(_train[0].Attributes);
                 _attributes.Remove("class");
             }
+
+            // make sure there are lists here
+            _probabilities[0] = new List<BayesContainer>();
+            _probabilities[1] = new List<BayesContainer>();
         }
 
         public void Train()
@@ -48,23 +52,20 @@ namespace assignment4
             splitByClassification.TryGetValue(0, out countOfZero);
             splitByClassification.TryGetValue(1, out countOfOne);
 
-            Console.Write("P(C={0})={1}", 0, GetProbabilityOfClassification(0));
-            Console.Write("P(C={0})={1}", 1, GetProbabilityOfClassification(1));
+            Console.Write("P(C={0})={1:F4} ", 0, GetProbabilityOfClassification(0));
+            Console.Write("P(C={0})={1:F4} ", 1, GetProbabilityOfClassification(1));
 
             CalculateProbabilitiesForClass(0);
             CalculateProbabilitiesForClass(1);
 
-            foreach(var c in _probabilities)
+            foreach (var c in _probabilities)
             {
-                Console.WriteLine(c);
+                foreach (var l in c.Value)
+                {
+                    Console.Write(l);
+                    Console.Write(" ");
+                }
             }
-
-            // print them
-        }
-
-        public void Test(List<DataRow> test)
-        {
-
         }
 
         private void CalculateProbabilitiesForClass(int classification)
@@ -76,7 +77,7 @@ namespace assignment4
                 List<BayesContainer> container = GetProbabilitiesForAttribute(attr, classification, allOfClass);
                 if (container != null)
                 {
-                    _probabilities.AddRange(container);
+                    _probabilities[classification].AddRange(container);
                 }
             }
         }
@@ -108,12 +109,67 @@ namespace assignment4
         {
             if(@class == 0)
             {
-                return countOfZero;
+                return (double)countOfZero / (double)_train.Count;
             }
             else
             {
-                return countOfOne;
+                return (double)countOfOne / (double)_train.Count;
             }
+        }
+
+        public void Test(List<DataRow> test, string typeString = "Test")
+        {
+            int correct = 0;
+
+            foreach (var row in test)
+            {
+                int actualClass = row.RetrieveClassification();
+
+                // calculate for class zero
+                double zero = ProbabiltyOfClassification(row, 0);
+                // calculate for class one
+                double one = ProbabiltyOfClassification(row, 1);
+
+                if(zero >= one)
+                {
+                    // class is 0
+                    if(actualClass == 0)
+                    {
+                        correct++;
+                    }
+                }
+                else
+                {
+                    // class is 1
+                    if(actualClass == 1)
+                    {
+                        correct++;
+                    }
+                }
+            }
+
+            double accuracy = (double)correct / (double)test.Count;
+
+            Console.WriteLine("Accuracy on {0} set ({1} instances): {2:F2}%", typeString, test.Count, accuracy * 100);
+        }
+
+        private double ProbabiltyOfClassification(DataRow row, int classification)
+        {
+            double chanceOfClassification = GetProbabilityOfClassification(classification);
+            List<BayesContainer> probability = _probabilities[classification];
+
+
+            foreach(var attr in _attributes)
+            {
+                // evil extra loop... whatever. I don't care about speed here
+                foreach(var container in probability)
+                {
+                    if (container.Attribute == attr)
+                        chanceOfClassification *= container.Probability;
+                }
+            }
+
+            return chanceOfClassification;
         }
     }
 }
