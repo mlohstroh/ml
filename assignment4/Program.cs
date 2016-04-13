@@ -10,8 +10,25 @@ namespace assignment4
     {
         static void Main(string[] args)
         {
-            var train = DataRow.ReadFile("data\\train.dat");
-            var test = DataRow.ReadFile("data\\test.dat");
+            if(args.Length != 2)
+            {
+                Console.WriteLine("Incorrect arguments... Please enter two arguments, first is train, second is test");
+                return;
+            }
+
+            List<DataRow> train = null;
+            List<DataRow> test = null;
+
+            try
+            {
+                train = DataRow.ReadFile(args[0]);
+                test = DataRow.ReadFile(args[1]);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error reading arguments! Dumping excemption: {0}", ex);
+                return;
+            }
 
             NBayes bayes = new NBayes(train);
             bayes.Train();
