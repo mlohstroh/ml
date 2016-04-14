@@ -87,7 +87,7 @@ namespace mlAssignment1
             {
                 // in a binary tree node, there will only be two results when splitting
                 // by an attribute
-                var tmp = GetDistByAttr(Subset, attr);
+                var tmp = DataRow.GetDistByAttr(Subset, attr);
 
                 // == 0
                 BooleanTreeNode right = new BooleanTreeNode(maxAttr, tmp[0]);
@@ -225,35 +225,6 @@ namespace mlAssignment1
             }
 
             return maxClass;
-        }
-
-        private Dictionary<int, List<DataRow>> GetDistByAttr(List<DataRow> subset, string attr)
-        {
-            // this method will be a bit specialized since we are in the binary tree builder
-            Dictionary<int, List<DataRow>> subsubsets = new Dictionary<int, List<DataRow>>();
-
-            for (int i = 0; i < subset.Count; i++)
-            {
-                DataRow current = subset[i];
-                int result = current.RetrieveValueAsInt(attr);
-                if (subsubsets.ContainsKey(result))
-                {
-                    subsubsets[result].Add(current);
-                }
-                else
-                {
-                    List<DataRow> subsubset = new List<DataRow>();
-                    subsubset.Add(current);
-                    subsubsets.Add(result, subsubset);
-                }
-            }
-
-            // make sure there are some 
-            if (!subsubsets.ContainsKey(0))
-                subsubsets[0] = new List<DataRow>();
-            if (!subsubsets.ContainsKey(1))
-                subsubsets[1] = new List<DataRow>();
-            return subsubsets;
         }
 
         public void PrintTree(int indent = -1)
